@@ -1,14 +1,10 @@
 #include "Ship.h"
 
-Ship::Ship() {
-	this->setSize(sf::Vector2f(shipSize));
-	this->angle = 0;
-	this->setRotation(0);
-	this->setFillColor(sf::Color::White);
-	this->setOrigin(shipSize.x / 2.f, shipSize.y / 2.f);
+buzi::Ship::Ship() {
+
 }
 
-void Ship::movement(float dt) {
+void buzi::Ship::movement(float dt) {
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !(velocity >= maxVelocity)) {
 		velocityDir += sf::Vector2f(dt * thrast * -cos(angletorii(angle - 90)), dt * thrast * -sin(angletorii(angle + 90)));
@@ -26,7 +22,7 @@ void Ship::movement(float dt) {
 	//velocity = sqrt(pow(velocityDir.x, 2) + pow(velocityDir.y, 2));
 }
 
-void Ship::friction(float dt) {
+void buzi::Ship::friction(float dt) {
 	
 
 	if (velocityDir.x > dt * frictionValue) {
@@ -52,9 +48,23 @@ void Ship::friction(float dt) {
 	velocity = sqrt(pow(velocityDir.x, 2) + pow(velocityDir.y, 2));
 }
 
-void Ship::physics(float dt) {
+void buzi::Ship::physics(float dt) {
 	this->movement(dt);
 	this->friction(dt);
 	this->move(velocityDir);
-	std::cout << velocity << "\n";
+}
+
+void buzi::Ship::setObj(sf::Texture& texture, sf::Vector2f windowSize) {
+	if (!texture.loadFromFile("Sprites/ship.png")) {
+		throw "ship texture not found!";
+	}
+	else {
+		this->setTexture(texture);
+		
+		this->angle = 0;
+		this->setRotation(0);
+		this->setOrigin(this->getGlobalBounds().width / 2.f, this->getGlobalBounds().height / 2.f);
+		this->setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+		this->setScale(0.5f, 0.5f);
+	}
 }

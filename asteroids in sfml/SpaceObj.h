@@ -7,10 +7,9 @@
 #include <iostream>
 #include <cmath>
 
-class SpaceObj: public sf::RectangleShape{
+class SpaceObj:public sf::Sprite{
 
 protected:
-	
 
 	sf::Vector2f velocityDir; //the speed and direction of the space object
 	float angle; //the current angle
@@ -21,7 +20,9 @@ protected:
 	//changes the angle to rii to use in the trig functions
 	float angletorii(float angle);
 
-
 	float sixtyFPSMove(float pixels);
+
+	virtual void setObj(sf::Texture &texture, sf::Vector2f windowSize) = 0;
+
 };
 

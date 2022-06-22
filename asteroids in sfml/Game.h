@@ -1,8 +1,11 @@
 #pragma once
 #include "Ship.h"
+
 class Game{
 	sf::Vector2f windowSize;
-	Ship ship;
+	sf::Texture texture;
+	buzi::Ship ship;
+	
 	sf::Clock clock;
 	float dt = 0.0;
 public:
@@ -19,6 +22,5 @@ public:
 
 	void mainLoop(sf::RenderWindow& window);
 
-	
 };
 
