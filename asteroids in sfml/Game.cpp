@@ -1,52 +1,50 @@
 #include "Game.h"
+#include "GameState.h"
 
-Game::Game(sf::Vector2f windowSize):windowSize(windowSize) {
-	ship.setObj(texture,windowSize);
-}
+#include <iostream>
 
-void Game::update(sf::RenderWindow& window, float dt) {
-	window.clear(sf::Color::Black);
-	ship.physics(dt);
-	this->wrap(window,ship);
-}
+namespace buzi {
 
-void Game::eventHandler(sf::RenderWindow& window) {
-	sf::Event event;
+	Game::Game(int width, int height, std::string title) {
 
-	while (window.pollEvent(event)) {
-		if (event.type == event.Closed) {
-			window.close();
+		data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
+		//data->window.setFramerateLimit(10);
+		//data->machine.addState(StateRef(new GameOverState(this->data,4)));
+		data->machine.addState(StateRef(new GameState(this->data)));
+		//data->machine.addState(StateRef(new GameState(this->data)));
+
+		//this->run();
+	}
+
+	void Game::run() {
+		float newTime, frameTime, interpolation;
+
+		float currentTime = this->clock.getElapsedTime().asSeconds();
+		float accumulator = 0.0f;
+
+		while (this->data->window.isOpen()) {
+			this->data->machine.processStateChanges();
+
+			newTime = this->clock.getElapsedTime().asSeconds();
+			frameTime = newTime - currentTime;
+
+			if (frameTime > 0.25f) {
+				frameTime = 0.25f;
+			}
+
+			currentTime = newTime;
+			accumulator += frameTime;
+
+			while (accumulator >= dt) {
+
+				this->data->machine.getActiveState()->handleInput();
+				this->data->machine.getActiveState()->update(dt);
+
+				accumulator -= dt;
+			}
+
+			interpolation = accumulator / dt;
+			this->data->machine.getActiveState()->draw(interpolation);
 		}
-
-	}
-}
-
-void Game::wrap(sf::RenderWindow& window, class SpaceObj& obj) {
-
-	if (obj.getPosition().x <= 0.f - obj.getGlobalBounds().width / 2.f) {
-		obj.setPosition(windowSize.x + obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
-	}
-	else if (obj.getPosition().x  >= windowSize.x + obj.getGlobalBounds().width / 2.f) {
-		obj.setPosition(0.f - obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
-	}
-
-	if (obj.getPosition().y <= 0.f - obj.getGlobalBounds().height / 2.f) {
-		obj.setPosition(obj.getPosition().x, windowSize.y + obj.getGlobalBounds().height / 2.f);
-	}
-	else if (obj.getPosition().y >= windowSize.y + obj.getGlobalBounds().height / 2.f) {
-		obj.setPosition(obj.getPosition().x, 0.f - obj.getGlobalBounds().height / 2.f);
-	}
-}
-
-void Game::render(sf::RenderWindow& window) {
-	window.draw(ship);
-	window.display();
-}
-void Game::mainLoop(sf::RenderWindow& window) {
-	while (window.isOpen()) {
-		dt = clock.restart().asSeconds();
-		this->eventHandler(window);
-		this->update(window, dt);
-		this->render(window);
 	}
 }

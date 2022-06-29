@@ -1,7 +1,7 @@
 #include "Ship.h"
 
-buzi::Ship::Ship() {
-
+buzi::Ship::Ship(std::shared_ptr<GameData> data):  data(data) {
+	this->setObj();
 }
 
 void buzi::Ship::movement(float dt) {
@@ -11,12 +11,12 @@ void buzi::Ship::movement(float dt) {
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		angle += dt * turnRate;
-		this->rotate(dt * -turnRate);
+		shipSprite.rotate(dt * -turnRate);
 
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		angle -= dt * turnRate;
-		this->rotate(dt * turnRate);
+		shipSprite.rotate(dt * turnRate);
 		
 	}
 	//velocity = sqrt(pow(velocityDir.x, 2) + pow(velocityDir.y, 2));
@@ -51,20 +51,24 @@ void buzi::Ship::friction(float dt) {
 void buzi::Ship::physics(float dt) {
 	this->movement(dt);
 	this->friction(dt);
-	this->move(velocityDir);
+	this->shipSprite.move(velocityDir);
 }
 
-void buzi::Ship::setObj(sf::Texture& texture, sf::Vector2f windowSize) {
-	if (!texture.loadFromFile("Sprites/ship.png")) {
-		throw "ship texture not found!";
-	}
-	else {
-		this->setTexture(texture);
-		
-		this->angle = 0;
-		this->setRotation(0);
-		this->setOrigin(this->getGlobalBounds().width / 2.f, this->getGlobalBounds().height / 2.f);
-		this->setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
-		this->setScale(0.5f, 0.5f);
-	}
+void buzi::Ship::draw(){
+	data->window.draw(shipSprite);
+}
+
+void buzi::Ship::setObj() {
+	this->angle = 0;
+	sf::Vector2u windowSize = data->window.getSize();
+	
+	shipSprite.setTexture(data->assets.getTexture("Ship"));		
+	shipSprite.setRotation(angle);
+	shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height / 2.f);
+	shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+	shipSprite.setScale(0.5f, 0.5f);
+}
+
+sf::Sprite& buzi::Ship::getSprite(){
+	return shipSprite;
 }

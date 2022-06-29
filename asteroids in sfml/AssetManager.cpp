@@ -2,7 +2,7 @@
 
 void AssetManager::setTexture(std::string textureName, std::string fileName){
 	sf::Texture texture;
-	if (!texture.loadFromFile(textureName)) {
+	if (!texture.loadFromFile(fileName)) {
 		throw "Can't find file name";
 	}
 	textures[textureName] = texture;

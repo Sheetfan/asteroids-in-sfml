@@ -6,7 +6,6 @@ namespace buzi {
 
 	public:
 	void setObj(sf::Texture& texture, sf::Vector2f windowSize);
-	void
 
 	};
 }

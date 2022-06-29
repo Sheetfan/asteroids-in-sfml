@@ -2,12 +2,11 @@
 
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
-#include "SFML/System.hpp"
-#include "SFML/Window.hpp"
 #include <iostream>
 #include <cmath>
 
-class SpaceObj:public sf::Sprite{
+namespace buzi {
+	class SpaceObj{
 
 protected:
 
@@ -22,7 +21,9 @@ protected:
 
 	float sixtyFPSMove(float pixels);
 
-	virtual void setObj(sf::Texture &texture, sf::Vector2f windowSize) = 0;
+	virtual void setObj() = 0;
 
-};
+	};
+}
+
 

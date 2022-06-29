@@ -1,26 +1,33 @@
 #pragma once
-#include "Ship.h"
 
-class Game{
-	sf::Vector2f windowSize;
-	sf::Texture texture;
-	buzi::Ship ship;
-	
-	sf::Clock clock;
-	float dt = 0.0;
-public:
+#include <memory>
+#include <string>
+#include <SFML/Graphics.hpp>
+#include "InputManager.h"
+#include "StateMachine.h"
+#include "AssetManager.h"
 
-	Game(sf::Vector2f windowSize);
+namespace buzi {
 
-	void update(sf::RenderWindow& window, float dt);
+	struct GameData {
+		StateMachine machine;
+		AssetManager assets;
+		InputManager input;
+		sf::RenderWindow window;
+	};
 
-	void eventHandler(sf::RenderWindow& window);
+	typedef std::shared_ptr<GameData> GameDataRef;
 
-	void wrap(sf::RenderWindow& window, class SpaceObj& obj);
+	class Game {
+	private:
+		// Updates run at 60 per second.
+		const float dt = 1.0f / 60.0f;
+		sf::Clock clock;
 
-	void render(sf::RenderWindow& window);
+		GameDataRef data = std::make_shared<GameData>();
 
-	void mainLoop(sf::RenderWindow& window);
-
-};
-
+	public:
+		Game(int width, int height, std::string title);
+		void run();
+	};
+}
