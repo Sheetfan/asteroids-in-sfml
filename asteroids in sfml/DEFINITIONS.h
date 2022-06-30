@@ -9,3 +9,8 @@
 
 #define WINDOW_HEIGHT 1200.f
 #define WINDOW_WIDTH 1000.f
+
+#define SHIP_THRAST 2.2f
+#define SHIP_FRICTIONVALUE 0.5f
+#define SHIP_TURNRATE 60.f
+#define SHIP_MAXVELOCITY 10.0f

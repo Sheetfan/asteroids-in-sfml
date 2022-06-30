@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "SpaceObj.h"
 #include "Game.h"
+#include "DEFINITIONS.h"
 
 namespace buzi {
 	class Ship :public SpaceObj {
@@ -9,10 +10,10 @@ namespace buzi {
 
 		sf::Sprite shipSprite;
 		sf::Vector2f const shipSize = sf::Vector2f(50.f, 100.f);
-		float thrast = sixtyFPSMove(2.2f);
-		float frictionValue = sixtyFPSMove(0.5f);
-		float turnRate = sixtyFPSMove(60.f);//How fast the ship turns
-		float maxVelocity = 10.0f;
+		float thrast = sixtyFPSMove(SHIP_THRAST);
+		float frictionValue = sixtyFPSMove(SHIP_FRICTIONVALUE);
+		float turnRate = sixtyFPSMove(SHIP_TURNRATE);//How fast the ship turns
+		float maxVelocity = SHIP_MAXVELOCITY;
 		float velocity = 0.0f;
 
 	public:
