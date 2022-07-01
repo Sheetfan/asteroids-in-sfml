@@ -6,14 +6,8 @@
 namespace buzi {
 
 	Game::Game(int width, int height, std::string title) {
-
 		data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
-		//data->window.setFramerateLimit(10);
-		//data->machine.addState(StateRef(new GameOverState(this->data,4)));
 		data->machine.addState(StateRef(new GameState(this->data)));
-		//data->machine.addState(StateRef(new GameState(this->data)));
-
-		//this->run();
 	}
 
 	void Game::run() {
@@ -47,4 +41,13 @@ namespace buzi {
 			this->data->machine.getActiveState()->draw(interpolation);
 		}
 	}
+
+	float angletorii(float angle) {
+		return angle * 3.14159265359 / 180;
+	}
+
+	float sixtyFPSMove(float pixels) {
+		return pixels / 0.17;
+	}
+
 }

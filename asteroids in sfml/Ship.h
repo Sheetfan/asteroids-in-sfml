@@ -1,5 +1,5 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+//#include "SFML/Graphics.hpp"
 #include "SpaceObj.h"
 #include "Game.h"
 #include "DEFINITIONS.h"

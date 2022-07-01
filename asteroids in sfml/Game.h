@@ -15,6 +15,9 @@ namespace buzi {
 		InputManager input;
 		sf::RenderWindow window;
 	};
+	float angletorii(float angle);
+
+	float sixtyFPSMove(float pixels);
 
 	typedef std::shared_ptr<GameData> GameDataRef;
 
@@ -29,5 +32,7 @@ namespace buzi {
 	public:
 		Game(int width, int height, std::string title);
 		void run();
+		//changes the angle to rii to use in the trig functions
+		
 	};
 }

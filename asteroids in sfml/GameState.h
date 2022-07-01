@@ -3,16 +3,18 @@
 #include "State.h"
 #include "Game.h"
 #include "Ship.h"
+#include "Asteroids.h"
 #include "SFML/Graphics.hpp"
+#include <vector>
 
 namespace buzi {
 	class GameState : public State {
-		sf::Texture texture;
-		Ship *ship;
-
-		float dt = 0.0;
-
 		GameDataRef data;
+
+		Ship *ship;
+		Asteroids* asteroid;
+		
+
 	public:
 
 		GameState(GameDataRef data);
@@ -26,6 +28,7 @@ namespace buzi {
 		void resume() {};
 
 		void wrap(sf::Sprite &obj);
+		void wrap(std::vector <AsteroidType> &asteroids);
 
 		
 	};
