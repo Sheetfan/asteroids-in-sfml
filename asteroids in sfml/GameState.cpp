@@ -22,12 +22,11 @@ namespace buzi {
 		asteroid = new Asteroids(data);
 	}
 	void GameState::update(float dt){
-		std::vector <AsteroidType> &asteroids = asteroid->getAsteroids();
-
 		ship->physics(dt);
 		asteroid->physics(dt);
 		this->wrap(ship->getSprite());
-		this->wrap(asteroids);
+		this->wrap(asteroid->getAsteroids());
+		this->wrap(ship->getBullets());
 	}
 	
 	void GameState::handleInput()
@@ -66,6 +65,26 @@ namespace buzi {
 			}
 		}
 		
+	}
+
+	void GameState::wrap(std::vector <Bullet>& bullet) {
+		sf::Vector2u windowSize = data->window.getSize();
+		for (auto& i : bullet) {
+			if (i.bulletShape.getPosition().x <= 0.f - i.bulletShape.getRadius() ){
+				i.bulletShape.setPosition(windowSize.x + i.bulletShape.getRadius(), i.bulletShape.getPosition().y);
+			}
+			else if (i.bulletShape.getPosition().x >= windowSize.x + i.bulletShape.getRadius()) {
+				i.bulletShape.setPosition(0.f - i.bulletShape.getRadius(), i.bulletShape.getPosition().y);
+			}
+
+			if (i.bulletShape.getPosition().y <= 0.f - i.bulletShape.getRadius()) {
+				i.bulletShape.setPosition(i.bulletShape.getPosition().x, windowSize.y + i.bulletShape.getRadius() / 2.f);
+			}
+			else if (i.bulletShape.getPosition().y >= windowSize.y + i.bulletShape.getRadius()) {
+				i.bulletShape.setPosition(i.bulletShape.getPosition().x, 0.f - i.bulletShape.getRadius());
+			}
+		}
+
 	}
 
 	void GameState::wrap(sf::Sprite& obj) {

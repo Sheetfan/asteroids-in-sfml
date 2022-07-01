@@ -13,8 +13,7 @@ namespace buzi {
 
 		Ship *ship;
 		Asteroids* asteroid;
-		
-
+	;
 	public:
 
 		GameState(GameDataRef data);
@@ -29,7 +28,7 @@ namespace buzi {
 
 		void wrap(sf::Sprite &obj);
 		void wrap(std::vector <AsteroidType> &asteroids);
-
+		void wrap(std::vector <Bullet>& bullet);
 		
 	};
 }
