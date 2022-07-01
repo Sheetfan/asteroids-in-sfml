@@ -148,6 +148,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="asteroids in sfml.cpp" />
     <ClCompile Include="Asteroids.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Asteroids.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="DEFINITIONS.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />

@@ -21,12 +21,26 @@ namespace buzi {
 		ship = new Ship(data);
 		asteroid = new Asteroids(data);
 	}
-	void GameState::update(float dt){
+	void GameState::update(float dt) {
+		sf::Sprite &shipSprite = ship->getSprite();
+		std::vector <AsteroidType>& asteroidSprites = asteroid->getAsteroids();
+		std::vector <Bullet>& bullet = ship->getBullets();
+
 		ship->physics(dt);
 		asteroid->physics(dt);
-		this->wrap(ship->getSprite());
-		this->wrap(asteroid->getAsteroids());
-		this->wrap(ship->getBullets());
+		this->wrap(shipSprite);
+		this->wrap(asteroidSprites);
+		this->wrap(bullet);
+
+		for (auto &i : asteroidSprites) {
+			collisionShipAsteroid(shipSprite, i);
+		}
+		
+		for (auto& i : bullet) {
+			for (auto &k : asteroidSprites) {
+				collisionBulletAsteroid(i, k);
+			}
+		}
 	}
 	
 	void GameState::handleInput()
@@ -85,6 +99,19 @@ namespace buzi {
 			}
 		}
 
+	}
+
+	void GameState::collisionShipAsteroid(sf::Sprite sprite, AsteroidType asteroidType){
+
+		if (collision.boxCollision(sprite,asteroidType)) {
+			std::cout << "Ship Asteroid" << "\n";
+		}
+	}
+
+	void GameState::collisionBulletAsteroid(Bullet bullet, AsteroidType asteroidType){
+		if (collision.boxCollision(bullet,asteroidType)) {
+			std::cout << "Bullet Asteroid" << "\n";
+		}
 	}
 
 	void GameState::wrap(sf::Sprite& obj) {

@@ -1,10 +1,11 @@
 #pragma once
 
+#include "SFML/Graphics.hpp"
 #include "State.h"
 #include "Game.h"
 #include "Ship.h"
 #include "Asteroids.h"
-#include "SFML/Graphics.hpp"
+#include "Collision.h"
 #include <vector>
 
 namespace buzi {
@@ -13,7 +14,8 @@ namespace buzi {
 
 		Ship *ship;
 		Asteroids* asteroid;
-	;
+		Collision collision;
+
 	public:
 
 		GameState(GameDataRef data);
@@ -29,6 +31,9 @@ namespace buzi {
 		void wrap(sf::Sprite &obj);
 		void wrap(std::vector <AsteroidType> &asteroids);
 		void wrap(std::vector <Bullet>& bullet);
+
+		void collisionShipAsteroid(sf::Sprite sprite, AsteroidType asteroidType);
+		void collisionBulletAsteroid(Bullet bullet, AsteroidType asteroidType);
 		
 	};
 }
