@@ -6,14 +6,17 @@ namespace buzi {
 	GameState::GameState(GameDataRef data) :data(data) {}
 
 	void GameState::init() {
-		data->assets.setTexture("Ship", SHIP_FILE_PATH);
+		data->assets.setTexture("Ship 1", SHIP_1_FILE_PATH);
+		data->assets.setTexture("Ship 2", SHIP_2_FILE_PATH);
+		data->assets.setTexture("Ship 3", SHIP_3_FILE_PATH);
+		data->assets.setTexture("Ship 4", SHIP_4_FILE_PATH);
 		data->assets.setTexture("Asteroid 1", ASTEROID_1_FILE_PATH);
 		data->assets.setTexture("Asteroid 2", ASTEROID_2_FILE_PATH);
 		data->assets.setTexture("Asteroid 3", ASTEROID_3_FILE_PATH);
 		data->assets.setTexture("Asteroid 4", ASTEROID_4_FILE_PATH);
 		data->assets.setTexture("Asteroid 5", ASTEROID_5_FILE_PATH);
-		data->assets.setTexture("Asteroid 5", ASTEROID_6_FILE_PATH);
-		data->assets.setTexture("Asteroid 5", ASTEROID_7_FILE_PATH);
+		data->assets.setTexture("Asteroid 6", ASTEROID_6_FILE_PATH);
+		data->assets.setTexture("Asteroid 7", ASTEROID_7_FILE_PATH);
 
 		ship = new Ship(data);
 		asteroid = new Asteroids(data);

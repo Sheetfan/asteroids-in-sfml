@@ -42,14 +42,33 @@ void buzi::Ship::friction(float dt) {
 	}
 	else if (velocityVector.y <= dt * frictionValue && velocityVector.y >= -frictionValue * dt) {
 		velocityVector.y = 0.0;
-
 	}
 	velocity = sqrt(pow(velocityVector.x, 2) + pow(velocityVector.y, 2));
+}
+
+void buzi::Ship::animate(){
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		if (clock.getElapsedTime().asSeconds() > SHIP_ANIMATION_DURATION / shipFrame.size()) {
+			if (frame < shipFrame.size() - 1) {
+				frame++;
+			}
+			else {
+				frame = 0;
+			}
+			shipSprite.setTexture(shipFrame[frame]);
+			clock.restart();
+		}
+	}
+	else {
+		frame = 0;
+		shipSprite.setTexture(shipFrame[frame]);
+	}
 }
 
 void buzi::Ship::physics(float dt) {
 	this->movement(dt);
 	this->friction(dt);
+	this->animate();
 	this->shipSprite.move(velocityVector);
 }
 
@@ -62,7 +81,11 @@ void buzi::Ship::setObj() {
 	this->velocityVector = sf::Vector2f(0.0,0.0);
 	sf::Vector2u windowSize = data->window.getSize();
 	
-	shipSprite.setTexture(data->assets.getTexture("Ship"));		
+	shipFrame[0] = data->assets.getTexture("Ship 1");	
+	shipFrame[1] = data->assets.getTexture("Ship 2");
+	shipFrame[2] = data->assets.getTexture("Ship 3");
+	shipFrame[3] = data->assets.getTexture("Ship 4");
+	shipSprite.setTexture(shipFrame[frame]);
 	shipSprite.setRotation(angle);
 	shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height / 2.f);
 	shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);

@@ -1,6 +1,9 @@
 #pragma once
 
-#define SHIP_FILE_PATH "Sprites/ship.png"
+#define SHIP_1_FILE_PATH "Sprites/ship-1.png"
+#define SHIP_2_FILE_PATH "Sprites/ship-2.png"
+#define SHIP_3_FILE_PATH "Sprites/ship-3.png"
+#define SHIP_4_FILE_PATH "Sprites/ship-4.png"
 
 #define ASTEROID_1_FILE_PATH "Sprites/asteroid-1.png"
 #define ASTEROID_2_FILE_PATH "Sprites/asteroid-2.png"
@@ -17,5 +20,6 @@
 #define SHIP_FRICTIONVALUE 0.5f
 #define SHIP_TURNRATE 60.f
 #define SHIP_MAXVELOCITY 10.0f
+#define SHIP_ANIMATION_DURATION 1
 
 #define ASTERIOD_VELOCITY 10.0f
