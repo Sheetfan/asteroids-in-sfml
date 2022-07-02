@@ -32,8 +32,8 @@ namespace buzi {
 		void wrap(std::vector <AsteroidType> &asteroids);
 		void wrap(std::vector <Bullet>& bullet);
 
-		void collisionShipAsteroid(sf::Sprite sprite, AsteroidType asteroidType);
-		void collisionBulletAsteroid(Bullet bullet, AsteroidType asteroidType);
+		void collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites);
+		void collisionBulletAsteroid(std::vector <Bullet>& bullet, std::vector <AsteroidType>& asteroidSprites);
 		
 	};
 }

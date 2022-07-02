@@ -32,15 +32,8 @@ namespace buzi {
 		this->wrap(asteroidSprites);
 		this->wrap(bullet);
 
-		for (auto &i : asteroidSprites) {
-			collisionShipAsteroid(shipSprite, i);
-		}
-		
-		for (auto& i : bullet) {
-			for (auto &k : asteroidSprites) {
-				collisionBulletAsteroid(i, k);
-			}
-		}
+		collisionShipAsteroid(shipSprite, asteroidSprites);
+		collisionBulletAsteroid(bullet, asteroidSprites);
 	}
 	
 	void GameState::handleInput()
@@ -101,16 +94,26 @@ namespace buzi {
 
 	}
 
-	void GameState::collisionShipAsteroid(sf::Sprite sprite, AsteroidType asteroidType){
-
-		if (collision.boxCollision(sprite,asteroidType)) {
-			std::cout << "Ship Asteroid" << "\n";
+	void GameState::collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites){
+		for (auto i : asteroidSprites) {
+			if (collision.boxCollision(sprite, i)) {
+				std::cout << "Ship Asteroid" << "\n";
+			}
 		}
+		
 	}
 
-	void GameState::collisionBulletAsteroid(Bullet bullet, AsteroidType asteroidType){
-		if (collision.boxCollision(bullet,asteroidType)) {
-			std::cout << "Bullet Asteroid" << "\n";
+	void GameState::collisionBulletAsteroid(std::vector <Bullet>& bullet, std::vector <AsteroidType>& asteroidSprites){
+		for (int i = 0; i < bullet.size(); i++) {
+			for (int k = 0; k < asteroidSprites.size();k++) {
+				if (collision.boxCollision(bullet[i],asteroidSprites[k])) {
+
+					bullet.erase(bullet.begin() + i);
+					asteroid->spawnAsteroid(asteroidSprites[k]);
+					asteroidSprites.erase(asteroidSprites.begin() + k);
+					break;
+				}
+			}
 		}
 	}
 

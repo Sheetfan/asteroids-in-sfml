@@ -26,10 +26,13 @@ namespace buzi {
 		void setObj();
 		void physics(float dt);
 		void draw();
-		void spawnAsteroid();
+		void spawnAsteroid(AsteroidType asteroid);
 
+		
 		std::vector <AsteroidType> &getAsteroids();
 	private:
+		void randomAsteroids(int level, int howMany);
+		void randomAsteroids(int level, int howMany, AsteroidType asteroidInstent);
 
 	};
 
