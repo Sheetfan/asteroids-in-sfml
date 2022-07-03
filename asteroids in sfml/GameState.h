@@ -38,13 +38,13 @@ namespace buzi {
 		void pause() {};
 		void resume() {};
 
-		void wrap(sf::Sprite &obj);
-		void wrap(std::vector <AsteroidType> &asteroids);
+	private:
+		void wrap(sf::Sprite& obj);
+		void wrap(std::vector <AsteroidType>& asteroids);
 		void wrap(std::vector <Bullet>& bullet);
 
-		void collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites);
+		void collisionShipAsteroid(sf::Sprite& sprite, std::vector <AsteroidType>& asteroidSprites);
 		void collisionBulletAsteroid(std::vector <Bullet>& bullet, std::vector <AsteroidType>& asteroidSprites);
-		
 	};
 }
 

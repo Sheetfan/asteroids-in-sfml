@@ -6,59 +6,92 @@ namespace buzi {
 	GameState::GameState(GameDataRef data) :data(data) {}
 
 	void GameState::init() {
-		data->assets.setTexture("Ship 1", SHIP_1_FILE_PATH);
-		data->assets.setTexture("Ship 2", SHIP_2_FILE_PATH);
-		data->assets.setTexture("Ship 3", SHIP_3_FILE_PATH);
-		data->assets.setTexture("Ship 4", SHIP_4_FILE_PATH);
-		data->assets.setTexture("Asteroid 1", ASTEROID_1_FILE_PATH);
-		data->assets.setTexture("Asteroid 2", ASTEROID_2_FILE_PATH);
-		data->assets.setTexture("Asteroid 3", ASTEROID_3_FILE_PATH);
-		data->assets.setTexture("Asteroid 4", ASTEROID_4_FILE_PATH);
-		data->assets.setTexture("Asteroid 5", ASTEROID_5_FILE_PATH);
-		data->assets.setTexture("Asteroid 6", ASTEROID_6_FILE_PATH);
-		data->assets.setTexture("Asteroid 7", ASTEROID_7_FILE_PATH);
+		this->data->assets.setTexture("Ship 1", SHIP_1_FILE_PATH);
+		this->data->assets.setTexture("Ship 2", SHIP_2_FILE_PATH);
+		this->data->assets.setTexture("Ship 3", SHIP_3_FILE_PATH);
+		this->data->assets.setTexture("Ship 4", SHIP_4_FILE_PATH);
 
-		ship = new Ship(data);
-		asteroid = new Asteroids(data);
+		this->data->assets.setTexture("Asteroid 1", ASTEROID_1_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 2", ASTEROID_2_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 3", ASTEROID_3_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 4", ASTEROID_4_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 5", ASTEROID_5_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 6", ASTEROID_6_FILE_PATH);
+		this->data->assets.setTexture("Asteroid 7", ASTEROID_7_FILE_PATH);
 
-		state = GameStates::eReady;
+		this->data->assets.setTexture("Explosion 1", EXPLOSION_1_FILE_PATH);
+		this->data->assets.setTexture("Explosion 2", EXPLOSION_2_FILE_PATH);
+		this->data->assets.setTexture("Explosion 3", EXPLOSION_3_FILE_PATH);
+		this->data->assets.setTexture("Explosion 4", EXPLOSION_4_FILE_PATH);
+
+		this->ship = new Ship(data);
+		this->asteroid = new Asteroids(data);
+
+		this->state = GameStates::eReady;
 	}
 	void GameState::update(float dt) {
-		if (state != GameStates::eReady) {
-			sf::Sprite &shipSprite = ship->getSprite();
-			std::vector <AsteroidType>& asteroidSprites = asteroid->getAsteroids();
-			std::vector <Bullet>& bullet = ship->getBullets();
+		if (this->state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > 2.f) {
+			this->state = GameStates::ePlaying;
+		}
+		if (state == GameStates::eDied) {
+			this->ship->animateExplosion();
+			this->state = GameStates::eRespawn;
+		}
 
-			ship->physics(dt);
-			asteroid->physics(dt);
+		if (state != GameStates::eReady) {
+			sf::Sprite &shipSprite = this->ship->getSprite();
+			std::vector <AsteroidType>& asteroidSprites = this->asteroid->getAsteroids();
+			std::vector <Bullet>& bullet = this->ship->getBullets();
+
+			
+				this->ship->physics(dt);
+			
+			
+			this->asteroid->physics(dt);
 			this->wrap(shipSprite);
 			this->wrap(asteroidSprites);
 			this->wrap(bullet);
 
-			collisionShipAsteroid(shipSprite, asteroidSprites);
-			collisionBulletAsteroid(bullet, asteroidSprites);
+			this->collisionShipAsteroid(shipSprite, asteroidSprites);
+			this->collisionBulletAsteroid(bullet, asteroidSprites);
 		}
-		if (state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > 2.f) {
-			state = GameStates::ePlaying;
-		}
+		
+
 	}
 	
-	void GameState::handleInput()
-	{
+	void GameState::handleInput(){
 		sf::Event event;
 
-		while (data->window.pollEvent(event)) {
+		while (this->data->window.pollEvent(event)) {
 			if (event.type == event.Closed) {
-				data->window.close();
+				this->data->window.close();
 			}
 		}
 	}
 	
 	void GameState::draw(float dt) {
-		data->window.clear(sf::Color::Black);
-		ship->draw();
-		asteroid->draw();
-		data->window.display();
+		this->data->window.clear(sf::Color::Black);
+		this->ship->draw();
+		this->asteroid->draw();
+		this->data->window.display();
+	}
+
+	void GameState::wrap(sf::Sprite& obj) {
+		sf::Vector2u windowSize = data->window.getSize();
+
+		if (obj.getPosition().x <= 0.f - obj.getGlobalBounds().width / 2.f) {
+			obj.setPosition(windowSize.x + obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
+		}
+		else if (obj.getPosition().x >= windowSize.x + obj.getGlobalBounds().width / 2.f) {
+			obj.setPosition(0.f - obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
+		}
+
+		if (obj.getPosition().y <= 0.f - obj.getGlobalBounds().height / 2.f) {
+			obj.setPosition(obj.getPosition().x, windowSize.y + obj.getGlobalBounds().height / 2.f);
+		}
+		else if (obj.getPosition().y >= windowSize.y + obj.getGlobalBounds().height / 2.f) {
+			obj.setPosition(obj.getPosition().x, 0.f - obj.getGlobalBounds().height / 2.f);
+		}
 	}
 
 	void GameState::wrap(std::vector <AsteroidType> &asteroids) {
@@ -104,7 +137,7 @@ namespace buzi {
 	void GameState::collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites){
 		for (auto i : asteroidSprites) {
 			if (collision.boxCollision(sprite, i)) {
-				state = GameStates::eDied;
+				this->state = GameStates::eDied;
 			}
 		}
 		
@@ -116,30 +149,11 @@ namespace buzi {
 				if (collision.boxCollision(bullet[i],asteroidSprites[k])) {
 
 					bullet.erase(bullet.begin() + i);
-					asteroid->spawnAsteroid(asteroidSprites[k]);
+					this->asteroid->spawnAsteroid(asteroidSprites[k]);
 					asteroidSprites.erase(asteroidSprites.begin() + k);
 					break;
 				}
 			}
 		}
 	}
-
-	void GameState::wrap(sf::Sprite& obj) {
-		sf::Vector2u windowSize = data->window.getSize();
-
-		if (obj.getPosition().x <= 0.f - obj.getGlobalBounds().width / 2.f) {
-			obj.setPosition(windowSize.x + obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
-		}
-		else if (obj.getPosition().x >= windowSize.x + obj.getGlobalBounds().width / 2.f) {
-			obj.setPosition(0.f - obj.getGlobalBounds().width / 2.f, obj.getPosition().y);
-		}
-
-		if (obj.getPosition().y <= 0.f - obj.getGlobalBounds().height / 2.f) {
-			obj.setPosition(obj.getPosition().x, windowSize.y + obj.getGlobalBounds().height / 2.f);
-		}
-		else if (obj.getPosition().y >= windowSize.y + obj.getGlobalBounds().height / 2.f) {
-			obj.setPosition(obj.getPosition().x, 0.f - obj.getGlobalBounds().height / 2.f);
-		}
-	}
-
 }

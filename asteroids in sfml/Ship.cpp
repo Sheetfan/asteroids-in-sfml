@@ -7,6 +7,28 @@ namespace buzi {
 		this->setObj();
 	}
 
+	void Ship::setObj() {
+		this->angle = 0;
+		this->velocityVector = sf::Vector2f(0.0, 0.0);
+
+		norm = sf::Vector2f(0.f, -1.f);
+
+		sf::Vector2u windowSize = data->window.getSize();
+
+		shipTexture[0] = &data->assets.getTexture("Ship 1");
+		shipTexture[1] = &data->assets.getTexture("Ship 2");
+		shipTexture[2] = &data->assets.getTexture("Ship 3");
+		shipTexture[3] = &data->assets.getTexture("Ship 4");
+
+
+
+		shipSprite.setTexture(*shipTexture[frame]);
+		shipSprite.setRotation(angle);
+		shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height / 2.f);
+		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+		shipSprite.setScale(0.5f, 0.5f);
+	}
+
 	void Ship::movement(float dt) {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !(velocity >= maxVelocity)) {
@@ -57,29 +79,41 @@ namespace buzi {
 		//std::cout << velocityVector.x << "," << velocityVector.y << "\n";
 	}
 
-	void Ship::animate() {
+	void Ship::animateMovement() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			if (clock.getElapsedTime().asSeconds() > SHIP_ANIMATION_DURATION / shipFrame.size()) {
-				if (frame < shipFrame.size() - 1) {
+			if (clock.getElapsedTime().asSeconds() > SHIP_ANIMATION_DURATION / shipTexture.size()) {
+				if (frame < shipTexture.size() - 1) {
 					frame++;
 				}
 				else {
 					frame = 0;
 				}
-				shipSprite.setTexture(shipFrame[frame]);
+				shipSprite.setTexture(*shipTexture[frame]);
 				clock.restart();
 			}
 		}
 		else {
 			frame = 0;
-			shipSprite.setTexture(shipFrame[frame]);
+			shipSprite.setTexture(*shipTexture[frame]);
+		}
+	}
+
+	void Ship::animateExplosion(){
+		int frame = 0;
+		while (frame < explosionFrame.size()) {
+			if (clock.getElapsedTime().asSeconds() > EXPLOSION_ANIMATION_DURATION / explosionFrame.size()) {
+				shipSprite.setTexture(*explosionFrame[frame]);
+				frame++;
+				clock.restart();
+			}
+			
 		}
 	}
 
 	void Ship::physics(float dt) {
 		this->movement(dt);
 		this->friction(dt);
-		this->animate();
+		this->animateMovement();
 		this->shipSprite.move(velocityVector);
 		this->shoot(dt);
 		this->despawnBullet();
@@ -95,25 +129,7 @@ namespace buzi {
 		data->window.draw(shipSprite);
 	}
 
-	void Ship::setObj() {
-		this->angle = 0;
-		this->velocityVector = sf::Vector2f(0.0, 0.0);
-
-		norm = sf::Vector2f(0.f,-1.f);
-		
-		sf::Vector2u windowSize = data->window.getSize();
-
-		shipFrame[0] = data->assets.getTexture("Ship 1");
-		shipFrame[1] = data->assets.getTexture("Ship 2");
-		shipFrame[2] = data->assets.getTexture("Ship 3");
-		shipFrame[3] = data->assets.getTexture("Ship 4");
-
-		shipSprite.setTexture(shipFrame[frame]);
-		shipSprite.setRotation(angle);
-		shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height / 2.f);
-		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
-		shipSprite.setScale(0.5f, 0.5f);
-	}
+	
 
 	void Ship::shoot(float dt) {
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)||(sf::Mouse::isButtonPressed(sf::Mouse::Left))) &&
