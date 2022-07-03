@@ -9,6 +9,13 @@
 #include <vector>
 
 namespace buzi {
+	enum class GameStates {
+		eReady,
+		eDied,
+		ePlaying,
+		eRespawn,
+		eGameOver
+	};
 	class GameState : public State {
 		GameDataRef data;
 
@@ -16,6 +23,9 @@ namespace buzi {
 		Asteroids* asteroid;
 		Collision collision;
 
+		GameStates state;
+
+		sf::Clock readyTimer;
 	public:
 
 		GameState(GameDataRef data);

@@ -8,9 +8,12 @@
 
 namespace buzi {
 	struct Bullet	{
+		sf::Clock lifeTime;
+
 		sf::CircleShape bulletShape;
 		sf::Vector2f velocityVector = sf::Vector2f(0.f, 0.f);
-		float velocity = sixtyFPSMove(30.f);
+		
+		float velocity = sixtyFPSMove(BULLET_VELOCITY);
 	};
 
 	class Ship :public SpaceObj {
@@ -55,6 +58,9 @@ namespace buzi {
 		sf::Sprite& getSprite();
 
 		std::vector <Bullet>& getBullets();
+	private:
+		void despawnBullet();
+
 	};
 }
 

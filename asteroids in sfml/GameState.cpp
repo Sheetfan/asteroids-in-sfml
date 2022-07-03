@@ -20,20 +20,27 @@ namespace buzi {
 
 		ship = new Ship(data);
 		asteroid = new Asteroids(data);
+
+		state = GameStates::eReady;
 	}
 	void GameState::update(float dt) {
-		sf::Sprite &shipSprite = ship->getSprite();
-		std::vector <AsteroidType>& asteroidSprites = asteroid->getAsteroids();
-		std::vector <Bullet>& bullet = ship->getBullets();
+		if (state != GameStates::eReady) {
+			sf::Sprite &shipSprite = ship->getSprite();
+			std::vector <AsteroidType>& asteroidSprites = asteroid->getAsteroids();
+			std::vector <Bullet>& bullet = ship->getBullets();
 
-		ship->physics(dt);
-		asteroid->physics(dt);
-		this->wrap(shipSprite);
-		this->wrap(asteroidSprites);
-		this->wrap(bullet);
+			ship->physics(dt);
+			asteroid->physics(dt);
+			this->wrap(shipSprite);
+			this->wrap(asteroidSprites);
+			this->wrap(bullet);
 
-		collisionShipAsteroid(shipSprite, asteroidSprites);
-		collisionBulletAsteroid(bullet, asteroidSprites);
+			collisionShipAsteroid(shipSprite, asteroidSprites);
+			collisionBulletAsteroid(bullet, asteroidSprites);
+		}
+		if (state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > 2.f) {
+			state = GameStates::ePlaying;
+		}
 	}
 	
 	void GameState::handleInput()
@@ -97,7 +104,7 @@ namespace buzi {
 	void GameState::collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites){
 		for (auto i : asteroidSprites) {
 			if (collision.boxCollision(sprite, i)) {
-				std::cout << "Ship Asteroid" << "\n";
+				state = GameStates::eDied;
 			}
 		}
 		

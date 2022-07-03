@@ -82,7 +82,8 @@ namespace buzi {
 		this->animate();
 		this->shipSprite.move(velocityVector);
 		this->shoot(dt);
-		for (auto &i : bullets) {
+		this->despawnBullet();
+		for (auto& i : bullets) {
 			i.bulletShape.move(i.velocityVector * dt);
 		}
 	}
@@ -92,7 +93,6 @@ namespace buzi {
 			data->window.draw(i.bulletShape);
 		}
 		data->window.draw(shipSprite);
-		
 	}
 
 	void Ship::setObj() {
@@ -114,6 +114,7 @@ namespace buzi {
 		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
 		shipSprite.setScale(0.5f, 0.5f);
 	}
+
 	void Ship::shoot(float dt) {
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)||(sf::Mouse::isButtonPressed(sf::Mouse::Left))) &&
 			(clockBullet.getElapsedTime().asSeconds() > 1/BULLET_RATE)) {
@@ -128,7 +129,15 @@ namespace buzi {
 			bullets.push_back(bullet);
 			clockBullet.restart();
 		}
-	};
+	}
+
+	void Ship::despawnBullet(){
+		for (int i = 0; i < bullets.size(); i++) {
+			if (bullets[i].lifeTime.getElapsedTime().asSeconds() > BULLET_DESPAWN_TIME) {
+				bullets.erase(bullets.begin() + i);
+			}
+		}
+	}
 
 	sf::Sprite& Ship::getSprite() {
 		return shipSprite;
@@ -137,5 +146,4 @@ namespace buzi {
 	std::vector<Bullet>& Ship::getBullets(){
 		return bullets;
 	}
-
 }
