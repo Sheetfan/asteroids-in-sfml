@@ -7,8 +7,6 @@
 
 namespace buzi {
 	class Collision {
-
-		
 	public: 
 
 		Collision() {}

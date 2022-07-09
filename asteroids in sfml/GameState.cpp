@@ -55,8 +55,6 @@ namespace buzi {
 		}
 
 		if (state != GameStates::eReady) {
-			
-
 			if (state == GameStates::ePlaying) {
 				this->ship->physics(dt);
 			}

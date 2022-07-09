@@ -15,10 +15,8 @@ namespace buzi {
 			if (sprite.getGlobalBounds().intersects(i.asteroidsSprite.getGlobalBounds())) {
 				return true;
 			}
-			else {
-				return false;
-			}
 		}
+		return false;
 		
 	}
 	bool Collision::boxCollision(Bullet bullet, AsteroidType asteroidType){
