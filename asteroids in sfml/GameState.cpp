@@ -32,6 +32,14 @@ namespace buzi {
 		this->hud = new HUD(data, lives);
 		
 		this->state = GameStates::eReady;
+
+		this->gameText.setFont(data->assets.getFont("Score font"));
+		this->gameText.setString("Ready");
+		this->gameText.setCharacterSize(100);
+		this->gameText.setOrigin(this->gameText.getGlobalBounds().width / 2.f, this->gameText.getGlobalBounds()
+			.height / 2.f);
+		this->gameText.setPosition(data->window.getSize().x / 2.f, data->window.getSize().y / 2.f);
+		readyTimer.restart();
 	}
 	void GameState::update(float dt) {
 		sf::Sprite& shipSprite = this->ship->getSprite();
@@ -43,7 +51,6 @@ namespace buzi {
 		}
 		if (state == GameStates::eDied) {
 			this->ship->animateExplosion(state);
-			//this->state = GameStates::eRespawn;
 
 		}
 
@@ -75,7 +82,16 @@ namespace buzi {
 			this->collisionBulletAsteroid(bullet, asteroidSprites);
 		}
 		
+		if (this->state == GameStates::eRespawn && lives == 0) {
+			state = GameStates::eGameOver;
+		}
 
+		if (state == GameStates::eGameOver) {
+			gameText.setString("Game Over!!!");
+			this->gameText.setOrigin(this->gameText.getGlobalBounds().width / 2.f, this->gameText.getGlobalBounds()
+				.height / 2.f);
+			this->gameText.setPosition(data->window.getSize().x / 2.f, data->window.getSize().y / 2.f);
+		}
 	}
 	
 	void GameState::handleInput(){
@@ -91,7 +107,10 @@ namespace buzi {
 	void GameState::draw(float dt) {
 		this->data->window.clear(sf::Color::Black);
 		
-		if (state != GameStates::eRespawn) {
+		if (state == GameStates::eReady || state == GameStates::eGameOver) {
+			data->window.draw(this->gameText);
+		}
+		if (state != GameStates::eRespawn && state != GameStates::eGameOver) {
 			this->ship->draw();
 		}
 

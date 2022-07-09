@@ -15,6 +15,8 @@ namespace buzi {
 		GameDataRef data;
 		GameStates state;
 
+		sf::Text gameText;
+
 		Ship *ship;
 		Asteroids* asteroid;
 		HUD* hud;
