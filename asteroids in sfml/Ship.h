@@ -20,6 +20,7 @@ namespace buzi {
 		GameDataRef data;
 
 		sf::Sprite shipSprite;
+		//sf::Sprite explosionSprite;
 		std::array <sf::Texture*, 4> shipTexture;
 		std::array <sf::Texture*, 4> explosionFrame;
 
@@ -35,6 +36,7 @@ namespace buzi {
 		sf::Vector2f norm;
 
 		int frame = 0;
+		int frameExplosion = 0;
 
 		sf::Clock clock;
 		sf::Clock clockBullet;
@@ -48,20 +50,22 @@ namespace buzi {
 		//applys friction to the ship
 		void friction(float dt);
 		
-		void animateExplosion();
+		void animateExplosion(GameStates& state);
 
 		//how each derived class object will move
 		void physics(float dt);
 		void draw();	
 
 		void shoot(float dt);
+		void despawnBullet();
 
+		void respawn();
 		sf::Sprite& getSprite();
 
 		std::vector <Bullet>& getBullets();
 	private:
 		void animateMovement();
-		void despawnBullet();
+		
 
 	};
 }

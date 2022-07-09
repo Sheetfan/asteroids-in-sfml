@@ -20,12 +20,17 @@ namespace buzi {
 		shipTexture[2] = &data->assets.getTexture("Ship 3");
 		shipTexture[3] = &data->assets.getTexture("Ship 4");
 
-
+		explosionFrame[0] = &data->assets.getTexture("Explosion 1");
+		explosionFrame[1] = &data->assets.getTexture("Explosion 2");
+		explosionFrame[2] = &data->assets.getTexture("Explosion 3");
+		explosionFrame[3] = &data->assets.getTexture("Explosion 4");
 
 		shipSprite.setTexture(*shipTexture[frame]);
+		//shipSprite.setTexture(*explosionFrame[frame]);
 		shipSprite.setRotation(angle);
 		shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height / 2.f);
 		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+		
 		shipSprite.setScale(0.5f, 0.5f);
 	}
 
@@ -91,6 +96,7 @@ namespace buzi {
 				shipSprite.setTexture(*shipTexture[frame]);
 				clock.restart();
 			}
+
 		}
 		else {
 			frame = 0;
@@ -98,15 +104,26 @@ namespace buzi {
 		}
 	}
 
-	void Ship::animateExplosion(){
-		int frame = 0;
-		while (frame < explosionFrame.size()) {
-			if (clock.getElapsedTime().asSeconds() > EXPLOSION_ANIMATION_DURATION / explosionFrame.size()) {
-				shipSprite.setTexture(*explosionFrame[frame]);
-				frame++;
-				clock.restart();
+	void Ship::animateExplosion(GameStates &state){
+		sf::Vector2u windowSize = data->window.getSize();
+		if (clock.getElapsedTime().asSeconds() > EXPLOSION_ANIMATION_DURATION / explosionFrame.size()) {
+			if (frameExplosion < explosionFrame.size()) {
+	
+				shipSprite.setTexture(*explosionFrame[frameExplosion], true);
+				shipSprite.setScale(1.0f, 1.0f);
+				shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height
+					/ 2.f);
+				frameExplosion++;
+			}
+			else {
+				//shipSprite.setTexture(*explosionFrame[frameExplosion], true);
+				frameExplosion = 0;
+				state = GameStates::eRespawn;
+				//shipSprite.setTextureRect()
 			}
 			
+
+			clock.restart();
 		}
 	}
 
@@ -116,7 +133,7 @@ namespace buzi {
 		this->animateMovement();
 		this->shipSprite.move(velocityVector);
 		this->shoot(dt);
-		this->despawnBullet();
+
 		for (auto& i : bullets) {
 			i.bulletShape.move(i.velocityVector * dt);
 		}
@@ -128,8 +145,6 @@ namespace buzi {
 		}
 		data->window.draw(shipSprite);
 	}
-
-	
 
 	void Ship::shoot(float dt) {
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)||(sf::Mouse::isButtonPressed(sf::Mouse::Left))) &&
@@ -153,6 +168,22 @@ namespace buzi {
 				bullets.erase(bullets.begin() + i);
 			}
 		}
+	}
+
+	void Ship::respawn(){
+		this->angle = 0;
+		this->velocityVector = sf::Vector2f(0.0, 0.0);
+		frame = 0;
+		norm = sf::Vector2f(0.f, -1.f);
+
+		sf::Vector2u windowSize = data->window.getSize();
+
+		shipSprite.setTexture(*shipTexture[frame],true);
+		shipSprite.setRotation(angle);
+		shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height
+			/ 2.f);
+		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+		shipSprite.setScale(0.5f, 0.5f);
 	}
 
 	sf::Sprite& Ship::getSprite() {
