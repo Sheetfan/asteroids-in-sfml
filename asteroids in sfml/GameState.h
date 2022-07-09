@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Ship.h"
 #include "Asteroids.h"
+#include "HUD.h"
 #include "Collision.h"
 #include <vector>
 
@@ -12,16 +13,19 @@ namespace buzi {
 
 	class GameState : public State {
 		GameDataRef data;
+		GameStates state;
 
 		Ship *ship;
 		Asteroids* asteroid;
-		Collision collision;
+		HUD* hud;
 
-		GameStates state;
+		Collision collision;
 
 		sf::Clock readyTimer;
 
 		bool readytimerSet;
+		int lives;
+		int score;
 	public:
 
 		GameState(GameDataRef data);

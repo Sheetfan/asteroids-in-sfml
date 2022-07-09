@@ -6,6 +6,7 @@ namespace buzi {
 	GameState::GameState(GameDataRef data) :data(data) {}
 
 	void GameState::init() {
+		lives = 3;
 		this->data->assets.setTexture("Ship 1", SHIP_1_FILE_PATH);
 		this->data->assets.setTexture("Ship 2", SHIP_2_FILE_PATH);
 		this->data->assets.setTexture("Ship 3", SHIP_3_FILE_PATH);
@@ -24,9 +25,12 @@ namespace buzi {
 		this->data->assets.setTexture("Explosion 3", EXPLOSION_3_FILE_PATH);
 		this->data->assets.setTexture("Explosion 4", EXPLOSION_4_FILE_PATH);
 
+		this->data->assets.setFont("Score font", HUD_SCORE_FONT);
+
 		this->ship = new Ship(data);
 		this->asteroid = new Asteroids(data);
-
+		this->hud = new HUD(data, lives);
+		
 		this->state = GameStates::eReady;
 	}
 	void GameState::update(float dt) {
@@ -47,8 +51,8 @@ namespace buzi {
 			readytimerSet = true;
 			readyTimer.restart();
 		}
-		if (state == GameStates::eRespawn && readyTimer.getElapsedTime().asSeconds() > 1.3f &&
-			!collision.boxCollision(shipSprite, asteroidSprites)) {
+		if (state == GameStates::eRespawn && readyTimer.getElapsedTime().asSeconds() > 
+			SHIP_RESPAWN_DELAY && !collision.boxCollision(shipSprite, asteroidSprites)) {
 			this->ship->respawn();
 			state = GameStates::ePlaying;
 			readytimerSet = false;
@@ -64,7 +68,7 @@ namespace buzi {
 			this->wrap(shipSprite);
 			this->wrap(asteroidSprites);
 			this->wrap(bullet);
-			if (state != GameStates::eRespawn) {
+			if (state == GameStates::ePlaying) {
 				this->collisionShipAsteroid(shipSprite, asteroidSprites);
 			}
 
@@ -92,6 +96,7 @@ namespace buzi {
 		}
 
 		this->asteroid->draw();
+		this->hud->draw();
 		this->data->window.display();
 	}
 
@@ -156,7 +161,10 @@ namespace buzi {
 	void GameState::collisionShipAsteroid(sf::Sprite &sprite, std::vector <AsteroidType>& asteroidSprites){
 		for (auto i : asteroidSprites) {
 			if (collision.boxCollision(sprite, i)) {
+				hud->updateLives(--lives);
 				this->state = GameStates::eDied;
+				std::cout << lives << "\n";
+				break;
 			}
 		}
 		
@@ -170,6 +178,8 @@ namespace buzi {
 					bullet.erase(bullet.begin() + i);
 					this->asteroid->spawnAsteroid(asteroidSprites[k]);
 					asteroidSprites.erase(asteroidSprites.begin() + k);
+					this->score += 10;
+					hud->updateScore(score);
 					break;
 				}
 			}

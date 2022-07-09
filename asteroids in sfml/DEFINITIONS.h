@@ -18,6 +18,8 @@
 #define EXPLOSION_3_FILE_PATH "Sprites/explosion-3.png"
 #define EXPLOSION_4_FILE_PATH "Sprites/explosion-4.png"
 
+#define HUD_SCORE_FONT "Fonts/Oxanium-Medium.ttf"
+
 #define WINDOW_WIDTH 1400.f
 #define WINDOW_HEIGHT 1000.f
 
@@ -26,6 +28,7 @@
 #define SHIP_TURNRATE 60.f
 #define SHIP_MAXVELOCITY 10.0f
 #define SHIP_ANIMATION_DURATION 0.1f
+#define SHIP_RESPAWN_DELAY 1.3f
 
 #define EXPLOSION_ANIMATION_DURATION 1.f
 
