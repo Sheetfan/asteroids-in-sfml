@@ -50,7 +50,7 @@ namespace buzi {
 		//applys friction to the ship
 		void friction(float dt);
 		
-		void animateExplosion(GameStates& state);
+		void animateExplosion(GameStates& state,float dt);
 
 		//how each derived class object will move
 		void physics(float dt);

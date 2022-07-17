@@ -44,13 +44,13 @@ namespace buzi {
 	void GameState::update(float dt) {
 		sf::Sprite& shipSprite = this->ship->getSprite();
 		std::vector <AsteroidType>& asteroidSprites = this->asteroid->getAsteroids();
-		std::vector <Bullet>& bullet = this->ship->getBullets();
+		std::vector <Bullet>& bullets = this->ship->getBullets();
 
-		if (this->state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > 2.f) {
+		if (this->state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > READY_STATE_DELAY) {
 			this->state = GameStates::ePlaying;
 		}
 		if (state == GameStates::eDied) {
-			this->ship->animateExplosion(state);
+			this->ship->animateExplosion(state,dt);
 
 		}
 
@@ -74,12 +74,15 @@ namespace buzi {
 			this->asteroid->physics(dt);
 			this->wrap(shipSprite);
 			this->wrap(asteroidSprites);
-			this->wrap(bullet);
+			this->wrap(bullets);
 			if (state == GameStates::ePlaying) {
 				this->collisionShipAsteroid(shipSprite, asteroidSprites);
 			}
 
-			this->collisionBulletAsteroid(bullet, asteroidSprites);
+			this->collisionBulletAsteroid(bullets, asteroidSprites);
+			for (auto& i : bullets) {
+				i.bulletShape.move(i.velocityVector * dt);
+			}
 		}
 		
 		if (this->state == GameStates::eRespawn && lives == 0) {
@@ -105,6 +108,7 @@ namespace buzi {
 	}
 	
 	void GameState::draw(float dt) {
+		std::vector <Bullet>& bullets = this->ship->getBullets();
 		this->data->window.clear(sf::Color::Black);
 		
 		if (state == GameStates::eReady || state == GameStates::eGameOver) {
@@ -113,7 +117,10 @@ namespace buzi {
 		if (state != GameStates::eRespawn && state != GameStates::eGameOver) {
 			this->ship->draw();
 		}
-
+		for (auto &i : bullets) {
+			data->window.draw(i.bulletShape);
+		}
+		
 		this->asteroid->draw();
 		this->hud->draw();
 		this->data->window.display();
@@ -182,7 +189,6 @@ namespace buzi {
 			if (collision.boxCollision(sprite, i)) {
 				hud->updateLives(--lives);
 				this->state = GameStates::eDied;
-				std::cout << lives << "\n";
 				break;
 			}
 		}

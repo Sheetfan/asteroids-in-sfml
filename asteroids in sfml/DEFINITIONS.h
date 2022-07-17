@@ -23,6 +23,8 @@
 #define WINDOW_WIDTH 1400.f
 #define WINDOW_HEIGHT 1000.f
 
+#define READY_STATE_DELAY 2.f
+
 #define SHIP_THRAST 2.2f
 #define SHIP_FRICTIONVALUE 0.5f
 #define SHIP_TURNRATE 60.f

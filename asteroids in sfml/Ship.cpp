@@ -36,16 +36,16 @@ namespace buzi {
 
 	void Ship::movement(float dt) {
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !(velocity >= maxVelocity)) {
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) || data->input.getController().up()) && !(velocity >= maxVelocity)) {
 			norm = sf::Vector2f(cos(angletorii(angle + 90)), sin(angletorii(angle - 90)));
 			velocityVector += norm * dt * thrast;
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || data->input.getController().left()) {
 			angle += dt * turnRate;
 			shipSprite.rotate(dt * -turnRate);
 			norm = sf::Vector2f(cos(angletorii(angle + 90)), sin(angletorii(angle - 90)));
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || data->input.getController().right()) {
 			angle -= dt * turnRate;
 			shipSprite.rotate(dt * turnRate);
 			norm = sf::Vector2f(cos(angletorii(angle + 90)), sin(angletorii(angle - 90)));
@@ -85,7 +85,7 @@ namespace buzi {
 	}
 
 	void Ship::animateMovement() {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || data->input.getController().up()) {
 			if (clock.getElapsedTime().asSeconds() > SHIP_ANIMATION_DURATION / shipTexture.size()) {
 				if (frame < shipTexture.size() - 1) {
 					frame++;
@@ -104,7 +104,7 @@ namespace buzi {
 		}
 	}
 
-	void Ship::animateExplosion(GameStates &state){
+	void Ship::animateExplosion(GameStates &state,float dt){
 		sf::Vector2u windowSize = data->window.getSize();
 		if (clock.getElapsedTime().asSeconds() > EXPLOSION_ANIMATION_DURATION / explosionFrame.size()) {
 			if (frameExplosion < explosionFrame.size()) {
@@ -133,21 +133,18 @@ namespace buzi {
 		this->animateMovement();
 		this->shipSprite.move(velocityVector);
 		this->shoot(dt);
-
-		for (auto& i : bullets) {
-			i.bulletShape.move(i.velocityVector * dt);
-		}
 	}
 
 	void Ship::draw() {
-		for (auto& i : bullets) {
-			data->window.draw(i.bulletShape);
-		}
+		//for (auto& i : bullets) {
+		//	data->window.draw(i.bulletShape);
+		//}
 		data->window.draw(shipSprite);
 	}
 
 	void Ship::shoot(float dt) {
-		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)||(sf::Mouse::isButtonPressed(sf::Mouse::Left))) &&
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)||(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			|| data->input.getController().A()) &&
 			(clockBullet.getElapsedTime().asSeconds() > 1/BULLET_RATE)) {
 			Bullet bullet;
 			bullet.bulletShape.setRadius(2.f);

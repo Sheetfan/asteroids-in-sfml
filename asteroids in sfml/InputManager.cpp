@@ -1,6 +1,9 @@
 #include "InputManager.h"
 
 namespace buzi {
+	InputManager::InputManager() {
+		controller = new Controller(0);
+	}
 	bool InputManager::inSpriteClicked(sf::Sprite object, sf::Mouse::Button button,sf::RenderWindow &window)
 	{
 		if (sf::Mouse::isButtonPressed(button)) {
@@ -15,5 +18,8 @@ namespace buzi {
 
 	sf::Vector2i InputManager::getMousePosition(sf::RenderWindow& window) {
 		return sf::Mouse::getPosition(window);
+	}
+	Controller InputManager::getController(){
+		return *controller;
 	}
 }
