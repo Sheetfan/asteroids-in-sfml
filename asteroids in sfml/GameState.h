@@ -28,14 +28,18 @@ namespace buzi {
 		bool readytimerSet;
 		int lives;
 		int score;
+		
+		int level;
+		float gameSpeed;
 	public:
-
 		GameState(GameDataRef data);
 	
 		void init();
 		void update(float dt);
 		void handleInput();
 		void draw(float dt);
+
+		void restart();
 		
 		void pause() {};
 		void resume() {};
@@ -47,6 +51,7 @@ namespace buzi {
 
 		void collisionShipAsteroid(sf::Sprite& sprite, std::vector <AsteroidType>& asteroidSprites);
 		void collisionBulletAsteroid(std::vector <Bullet>& bullet, std::vector <AsteroidType>& asteroidSprites);
+		void nextlevel();
 	};
 }
 

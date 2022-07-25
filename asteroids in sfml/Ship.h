@@ -60,6 +60,8 @@ namespace buzi {
 		void despawnBullet();
 
 		void respawn();
+
+		void reset();
 		sf::Sprite& getSprite();
 
 		std::vector <Bullet>& getBullets();

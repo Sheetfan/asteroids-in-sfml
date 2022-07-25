@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace buzi {
-	Asteroids::Asteroids(GameDataRef data) : data(data) {
+	Asteroids::Asteroids(GameDataRef data, float gameSpeed) : data(data),gameSpeed(gameSpeed) {
 		setObj();
 	}
 	void Asteroids::setObj() {
@@ -25,7 +25,6 @@ namespace buzi {
 	void Asteroids::physics(float dt) {
 		for (auto& i : asteroids) {
 			i.asteroidsSprite.move(i.velocityVector * dt);
-			//i.asteroidsSprite.rotate(sixtyFPSMove(10.f) * dt);
 		}
 	}
 	void Asteroids::draw() {
@@ -34,13 +33,23 @@ namespace buzi {
 		}
 	}
 
+	//used when player destroy a asteroid
 	void Asteroids::spawnAsteroid(AsteroidType asteroid) {
 		if (asteroid.level < 3 ) {
-			randomAsteroids(++asteroid.level, 2, asteroid);
-			
+			randomAsteroids(++asteroid.level, 2, asteroid);		
 		}
 	}
 
+	void Asteroids::changeSpeed(float changeInSpeed){
+		gameSpeed = changeInSpeed;
+	}
+
+	void Asteroids::restart(){
+		asteroids.clear();
+		setObj();
+	}
+
+	//used to set up the asteroids when the game start or after each level
 	void Asteroids::randomAsteroids(int level, int howMany){
 		int random;
 
@@ -51,6 +60,7 @@ namespace buzi {
 
 		AsteroidType asteroid;
 
+		// randomly pick textures for each asteroids
 		for (int i = 0; i < howMany; i++) {
 			random = disRamdomTexture(mt);
 			switch (random) {
@@ -78,7 +88,8 @@ namespace buzi {
 			}
 			asteroid.angle = disRamdomAngle(mt);
 			asteroid.level = level;
-			asteroid.velocityVector = sf::Vector2f(-cos(angletorii(asteroid.angle)), sin(-angletorii(asteroid.angle))) * asteroid.velocity;
+			asteroid.velocityVector = sf::Vector2f(-cos(angletorii(asteroid.angle)), sin(-angletorii(asteroid.angle))) * 
+				asteroid.velocity * gameSpeed;
 
 			asteroid.asteroidsSprite.setOrigin(asteroid.asteroidsSprite.getGlobalBounds().width / 2.f,
 				asteroid.asteroidsSprite.getGlobalBounds().height / 2.f);
@@ -86,6 +97,7 @@ namespace buzi {
 
 		}
 	}
+	//used when player destroy a asteroid;
 	void Asteroids::randomAsteroids(int level, int howMany, AsteroidType asteroidInstent){
 		int random;
 
@@ -95,7 +107,8 @@ namespace buzi {
 		std::uniform_int_distribution <size_t> disRamdomAngle(0, 360);
 
 		AsteroidType asteroid;
-		
+
+		// randomly pick textures for each asteroids
 		for (int i = 0; i < howMany; i++) {
 			random = disRamdomTexture(mt);
 			switch (random) {
@@ -123,7 +136,8 @@ namespace buzi {
 			}
 			asteroid.angle = disRamdomAngle(mt);
 			asteroid.level = level;
-			asteroid.velocityVector = sf::Vector2f(-cos(angletorii(asteroid.angle)), sin(-angletorii(asteroid.angle))) * asteroid.velocity * ((float) level) * 1.f;
+			asteroid.velocityVector = sf::Vector2f(-cos(angletorii(asteroid.angle)), sin(-angletorii(asteroid.angle))) * asteroid.velocity 
+				* ((float) level) * gameSpeed;
 
 			asteroid.asteroidsSprite.setOrigin(asteroid.asteroidsSprite.getGlobalBounds().width / 2.f,
 				asteroid.asteroidsSprite.getGlobalBounds().height / 2.f);
@@ -140,4 +154,6 @@ namespace buzi {
 	std::vector<AsteroidType>& Asteroids::getAsteroids() {
 		return asteroids;
 	}
+
+
 }

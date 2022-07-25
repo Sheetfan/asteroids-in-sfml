@@ -19,6 +19,7 @@
 #define EXPLOSION_4_FILE_PATH "Sprites/explosion-4.png"
 
 #define HUD_SCORE_FONT "Fonts/Oxanium-Medium.ttf"
+#define HUD_Level_FONT "Fonts/Oxanium-Medium.ttf"
 
 #define WINDOW_WIDTH 1400.f
 #define WINDOW_HEIGHT 1000.f
@@ -45,5 +46,6 @@ enum class GameStates {
 	eDied,
 	ePlaying,
 	eRespawn,
-	eGameOver
+	eGameOver,
+	eNextLevel
 };

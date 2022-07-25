@@ -18,7 +18,12 @@ namespace buzi {
 		scoreText.setCharacterSize(45);
 		scoreText.setPosition(data->window.getSize().x - scoreText.getGlobalBounds().width -100.f
 			, 40.f);
-		
+
+		levelText.setFont(data->assets.getFont("Level font"));
+		levelText.setString("Level: 1");
+		levelText.setCharacterSize(45);
+		levelText.setPosition(data->window.getSize().y * 5/100,
+			data->window.getSize().y - (levelText.getGlobalBounds().height)*3.f);
 	}
 	void HUD::updateLives(int lives){
 		this->lives.clear();
@@ -34,16 +39,22 @@ namespace buzi {
 		std::stringstream ss;
 
 		ss << std::setfill('0') << std::setw(10) << score;
-		scoreText.setFont(data->assets.getFont("Score font"));
+		//scoreText.setFont(data->assets.getFont("Score font"));
 		scoreText.setString(ss.str());
-		scoreText.setCharacterSize(45);
+		//scoreText.setCharacterSize(45);
 		scoreText.setPosition(data->window.getSize().x - scoreText.getGlobalBounds().width - 100.f
 			, 40.f);
+	}
+	void HUD::updateLevel(int level){
+		std::stringstream ss;
+		ss << "level: " << level;
+		levelText.setString(ss.str());
 	}
 	void HUD::draw(){
 		for (auto &i : lives) {
 			data->window.draw(i);
 		}
 		data->window.draw(scoreText);
+		data->window.draw(levelText);
 	}
 }

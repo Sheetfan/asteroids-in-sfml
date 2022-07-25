@@ -3,10 +3,10 @@
 #include <iostream>
 
 namespace buzi {
-	GameState::GameState(GameDataRef data) :data(data) {}
+	GameState::GameState(GameDataRef data) :data(data),lives(3),score(0),gameSpeed(1),level(1) {}
 
 	void GameState::init() {
-		lives = 3;
+		
 		this->data->assets.setTexture("Ship 1", SHIP_1_FILE_PATH);
 		this->data->assets.setTexture("Ship 2", SHIP_2_FILE_PATH);
 		this->data->assets.setTexture("Ship 3", SHIP_3_FILE_PATH);
@@ -26,9 +26,10 @@ namespace buzi {
 		this->data->assets.setTexture("Explosion 4", EXPLOSION_4_FILE_PATH);
 
 		this->data->assets.setFont("Score font", HUD_SCORE_FONT);
+		this->data->assets.setFont("Level font", HUD_Level_FONT);
 
 		this->ship = new Ship(data);
-		this->asteroid = new Asteroids(data);
+		this->asteroid = new Asteroids(data,gameSpeed);
 		this->hud = new HUD(data, lives);
 		
 		this->state = GameStates::eReady;
@@ -46,6 +47,12 @@ namespace buzi {
 		std::vector <AsteroidType>& asteroidSprites = this->asteroid->getAsteroids();
 		std::vector <Bullet>& bullets = this->ship->getBullets();
 
+		if (this->state == GameStates::eReady) {
+			this->gameText.setString("Ready");
+			this->gameText.setOrigin(this->gameText.getGlobalBounds().width / 2.f, this->gameText.getGlobalBounds()
+				.height / 2.f);
+			this->gameText.setPosition(data->window.getSize().x / 2.f, data->window.getSize().y / 2.f);
+		}
 		if (this->state == GameStates::eReady && readyTimer.getElapsedTime().asSeconds() > READY_STATE_DELAY) {
 			this->state = GameStates::ePlaying;
 		}
@@ -54,17 +61,19 @@ namespace buzi {
 
 		}
 
+		//makes sure the timer only resets once the respawn state started 
 		if (state == GameStates::eRespawn && readytimerSet == false) {
 			readytimerSet = true;
 			readyTimer.restart();
 		}
+		//after the respawn delay the ship will respawn
 		if (state == GameStates::eRespawn && readyTimer.getElapsedTime().asSeconds() > 
 			SHIP_RESPAWN_DELAY && !collision.boxCollision(shipSprite, asteroidSprites)) {
 			this->ship->respawn();
 			state = GameStates::ePlaying;
 			readytimerSet = false;
 		}
-
+		// it starts the game after the eReady state
 		if (state != GameStates::eReady) {
 			if (state == GameStates::ePlaying) {
 				this->ship->physics(dt);
@@ -89,11 +98,25 @@ namespace buzi {
 			state = GameStates::eGameOver;
 		}
 
+		//it will display game text while in the game over state
 		if (state == GameStates::eGameOver) {
 			gameText.setString("Game Over!!!");
 			this->gameText.setOrigin(this->gameText.getGlobalBounds().width / 2.f, this->gameText.getGlobalBounds()
 				.height / 2.f);
 			this->gameText.setPosition(data->window.getSize().x / 2.f, data->window.getSize().y / 2.f);
+		}
+
+		//it was will go to the next level when the all asteroid are gone
+		if (asteroidSprites.size() == 0 && state == GameStates::ePlaying) {
+			hud->updateLevel(++level);
+			gameSpeed += 0.2;
+			asteroid->changeSpeed(gameSpeed);
+			asteroid->setObj();
+			ship->reset();
+			state = GameStates::eReady;
+			bullets.clear();
+			readyTimer.restart();
+			//readytimerSet = false;
 		}
 	}
 	
@@ -103,6 +126,10 @@ namespace buzi {
 		while (this->data->window.pollEvent(event)) {
 			if (event.type == event.Closed) {
 				this->data->window.close();
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && state == 
+				GameStates::eGameOver) {
+				restart();
 			}
 		}
 	}
@@ -124,6 +151,18 @@ namespace buzi {
 		this->asteroid->draw();
 		this->hud->draw();
 		this->data->window.display();
+	}
+
+	void GameState::restart(){
+		lives = 3;
+		score = 0;
+		hud->updateLives(lives);
+		hud->updateScore(score);
+		this->ship->respawn();
+		asteroid->restart();
+		level = 1;
+		state = GameStates::eReady;
+		
 	}
 
 	void GameState::wrap(sf::Sprite& obj) {

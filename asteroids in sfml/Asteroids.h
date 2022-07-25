@@ -20,20 +20,24 @@ namespace buzi {
 		GameDataRef data;
 
 		std::vector <AsteroidType> asteroids;
-
+		float gameSpeed;
 	public:
-		Asteroids(GameDataRef data);
+		Asteroids(GameDataRef data,float gameSpeed);
+
 		void setObj();
 		void physics(float dt);
 		void draw();
-		void spawnAsteroid(AsteroidType asteroid);
 
-		
+		void spawnAsteroid(AsteroidType asteroid);
+		void changeSpeed(float changeInSpeed);
+		void restart();
+
 		std::vector <AsteroidType> &getAsteroids();
 	private:
+
 		void randomAsteroids(int level, int howMany);
 		void randomAsteroids(int level, int howMany, AsteroidType asteroidInstent);
-
+		
 	};
 
 }

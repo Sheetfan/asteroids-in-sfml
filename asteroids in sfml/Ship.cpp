@@ -168,17 +168,29 @@ namespace buzi {
 	}
 
 	void Ship::respawn(){
+		sf::Vector2u windowSize = data->window.getSize();
 		this->angle = 0;
 		this->velocityVector = sf::Vector2f(0.0, 0.0);
 		frame = 0;
 		norm = sf::Vector2f(0.f, -1.f);
 
-		sf::Vector2u windowSize = data->window.getSize();
-
 		shipSprite.setTexture(*shipTexture[frame],true);
 		shipSprite.setRotation(angle);
 		shipSprite.setOrigin(shipSprite.getGlobalBounds().width / 2.f, shipSprite.getGlobalBounds().height
 			/ 2.f);
+		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+		shipSprite.setScale(0.5f, 0.5f);
+	}
+
+	void Ship::reset()	{
+		sf::Vector2u windowSize = data->window.getSize();
+		this->angle = 0;
+		this->velocityVector = sf::Vector2f(0.0, 0.0);
+		frame = 0;
+		norm = sf::Vector2f(0.f, -1.f);
+
+		shipSprite.setTexture(*shipTexture[frame]);
+		shipSprite.setRotation(angle);
 		shipSprite.setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
 		shipSprite.setScale(0.5f, 0.5f);
 	}
