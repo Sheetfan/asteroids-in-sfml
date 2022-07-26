@@ -1,4 +1,4 @@
-# asteroids in sfml 2.5.1
+# Asteroids in sfml 2.5.1
 
 ## controls:
 
