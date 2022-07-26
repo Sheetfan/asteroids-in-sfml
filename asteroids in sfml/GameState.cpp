@@ -158,7 +158,7 @@ namespace buzi {
 		score = 0;
 		hud->updateLives(lives);
 		hud->updateScore(score);
-		this->ship->respawn();
+		ship->respawn();
 		asteroid->restart();
 		level = 1;
 		state = GameStates::eReady;
