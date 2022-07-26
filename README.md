@@ -1,17 +1,17 @@
-asteroids in sfml 2.5.1
+# asteroids in sfml 2.5.1
 
-controls:
+##controls:
 
-keyboard controls
-w: to move forward
-a: to rotate the ship to the left
-d: to rotate the ship to the right
+keyboard controls<br/>
+w: to move forward<br/>
+a: to rotate the ship to the left<br/>
+d: to rotate the ship to the right<br/>
 
-left click or space : is to shoot
+left click or space : is to shoot<br/>
 
-xbox controls
-up-D-pad: to move forward
-left-D-pad: to rotate the ship to the left
-right-D-pad-D-pad: to rotate the ship to the right
+xbox controls<br/>
+up-D-pad: to move forward<br/>
+left-D-pad: to rotate the ship to the left<br/>
+right-D-pad-D-pad: to rotate the ship to the right<br/>
 
-A : is to shoot
+A : is to shoot<br/>
