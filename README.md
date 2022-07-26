@@ -2,12 +2,12 @@
 
 ## controls:
 
-keyboard controls<br/>
+### keyboard controls<br/>
 w: to move forward<br/>
 a: to rotate the ship to the left<br/>
 d: to rotate the ship to the right<br/>
 
-left click or space : is to shoot<br/>
+### left click or space : is to shoot<br/>
 
 xbox controls<br/>
 up-D-pad: to move forward<br/>
