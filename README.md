@@ -1,6 +1,6 @@
 # asteroids in sfml 2.5.1
 
-##controls:
+## controls:
 
 keyboard controls<br/>
 w: to move forward<br/>
